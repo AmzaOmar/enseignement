@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="template_chefDepartement">
+<head>
+    <meta charset="UTF-8">
+    <link  rel="stylesheet" href="../static/css/bootstrap.css" th:href="@{/css/bootstrap.css}"/>
+    <link  rel="stylesheet" href="../static/css/buttons.dataTables.min.css" th:href="@{/css/buttons.dataTables.min.css}"/>
+    <link  rel="stylesheet" href="../static/css/jquery.dataTables.min.css" th:href="@{/css/jquery.dataTables.min.css}"/>
+
+    <script src="../static/js/jquery-3.7.0.js" th:src="@{/js/jquery-3.7.0.js}"></script>
+    <script src="../static/js/bootstrap.js" th:src="@{/js/bootstrap.js}"></script>
+    <script src="../static/js/dataTables.buttons.min.js" th:src="@{/js/dataTables.buttons.min.js}"></script>
+    <script src="../static/js/jquery.dataTables.min.js" th:src="@{/js/jquery.dataTables.min.js}"></script>
+
+    <title>Title</title>
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-left">
+                    <li>
+                        <a><span>Accueil</span></a>
+                    </li>
+                    <li>
+                        <a><span>Emploi du Temps</span></a>
+                    </li>
+                    <li>
+                        <a><span>Syllabus</span></a>
+                    </li>
+                    <li>
+                        <a th:href="@{/ChefDepartement/Repartition}"><span>Repartition</span></a>
+                    </li>
+                    <li>
+                        <a th:href="@{/ChefDepartement/Enseignant}"><span>Enseignants</span></a>
+                    </li>
+                    <li>
+                        <a th:href="@{/ChefDepartement/Formation}"><span>Formations</span></a>
+                    </li>
+                    <li>
+                        <a th:href="@{/ChefDepartement/Maquette}"><span>Maquette</span></a>
+                    </li>
+                    <li>
+                        <a th:href="@{/ChefDepartement/GestionEmploiDuTemps}"><span>Gestion emploi du temps</span></a>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <span th:text="${prenom+'. '+nom}"></span><span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a th:href="@{/profil}"><span>Profil</span></a>
+                            </li>
+                            <li><a th:href="@{/logout}"><span>Deconnexion</span></a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+</header>
+<div layout:fragment="custom-content" class="container">
+
+    <br/>
+    <h3 style="text-align: center">La liste des Maquette</h3>
+
+    <div class="tab-content">
+
+        <div id="tab_Maquette" class="tab-pane fade in active">
+
+            <div class="row" style="padding-bottom: 10px; padding-top: 10px">
+                <div style="text-align: center">
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#form_Ajouter_Maquette" >Ajouter Maquette</button>
+                </div>
+            </div>
+
+            <!-- Debut popup ajouter un Maquette -->
+            <div data-dismiss="modal" style="margin-top:25px">
+                <div class="modal fade" id="form_Ajouter_Maquette">
+                    <div class="modal-dialog" >
+                        <div class="modal-content panel-success" >
+                            <!--modal Header-->
+                            <div class="modal-header panel-heading" >
+                                <button type="button" class="close" data-dismiss="modal">x</button>
+                                <h4 class="modal-title" style="text-align: center">Ajouter une Maquette</h4>
+                            </div>
+                            <!--modal Body-->
+                            <form th:action="@{/ChefDepartement/Classe/{classeid}/Maquette/ajouterMaquette(classeid=${classe.id})}" method="post">
+                                <div class="modal-body" >
+                                    <div class="form-group">
+                                        <label >Code</label>
+                                        <input type="text" class="form-control" name="code"  placeholder="Code" />
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label >Année</label>
+                                        <input type="text" class="form-control" name="annee" placeholder="Année"/>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label >Nombre de UE</label>
+                                        <input type="text" class="form-control" name="nbUEs" placeholder="Nbre UE" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label >Description</label>
+                                        <input type="text" class="form-control" name="description" placeholder="Description" />
+                                    </div>
+
+                                </div>
+                                <!--modal Footer-->
+                                <div class="modal-footer" >
+                                    <div class="row">
+                                        <div class="col-lg-3  col-md-3 col-sm-3 col-xs-4">
+                                            <button type="submit" class="btn btn-success">Ajouter</button>
+                                        </div>
+                                        <div class="col-lg-offset-5 col-lg-3 col-md-offset-5 col-md-3 col-sm-offset-5 col-sm-3 col-xs-8">
+                                            <button type="submit" class="btn btn-default " data-dismiss="modal">Annuler</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Fin popup ajouter un Maquette -->
+
+            <!-- Debut lister tout les Maquettes -->
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped" id="table_Maquette">
+                    <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Nombre credit total</th>
+                        <th>Nombre de UE</th>
+                        <th>Nombre heure total</th>
+                        <th>Opérations</th>
+                        <th>Détails</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="maquette:${maquettes}">
+                        <td th:text="${maquette.code}"></td>
+                        <td th:text="${maquette.nbCreditsTotal}"></td>
+                        <td th:text="${maquette.nbUEs}"></td>
+                        <td th:text="${maquette.nbHeuresTotal}"></td>
+                        <td>
+                            <button class="btn btn-info btn-xs" data-toggle="modal" th:attr="data-target='#form_Modifier_Maquette'+${maquette.id}">
+                                Modifier
+                            </button>
+                            <button class="btn btn-danger btn-xs" data-toggle="modal" th:attr="data-target='#form_Supprimer_Maquette'+${maquette.id}">
+                                Supprimer
+                            </button>
+                        </td>
+                        <td>
+                            <a class="btn btn-primary btn-sm" th:href="@{/ChefDepartement/Maquette/{maquetteid}/UE(maquetteid=${maquette.id})}">Voir</a>
+                        </td>
+
+
+                        <!-- Debut popup modifier un Maquette -->
+                        <div data-dismiss="modal">
+                            <div class="modal fade" th:attr="id='form_Modifier_Maquette'+${maquette.id}" >
+                                <div class="modal-dialog" >
+                                    <div class="modal-content panel-info" >
+                                        <!--modal Header-->
+                                        <div class="modal-header panel-heading" >
+                                            <button type="button" class="close" data-dismiss="modal">x</button>
+                                            <h4 class="modal-title" style="text-align: center">Modifier Maquette</h4>
+                                        </div>
+                                        <!--modal Body-->
+                                        <form th:action="@{/ChefDepartement/Classe/{classeid}/Maquette/modifierMaquette(classeid=${classe.id})}" method="post">
+                                            <div class="modal-body" >
+                                                <div style="display: none">
+                                                    <input name="id" th:value="${maquette.id}" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <label >Code</label>
+                                                    <input type="text" class="form-control" name="code" th:value="${maquette.code}"/>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label >Annee</label>
+                                                    <input type="text" class="form-control" name="libelle" th:value="${maquette.annee}"/>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label >Nombre UE</label>
+                                                    <input type="text" class="form-control" name="credit" th:value="${maquette.nbUEs}"/>
+                                                </div>
+
+                                            </div>
+                                            <!--modal Footer-->
+                                            <div class="modal-footer" >
+                                                <div class="row">
+                                                    <div class="col-lg-3  col-md-3 col-sm-3 col-xs-4">
+                                                        <button type="submit" class="btn btn-info" >Modifier</button>
+                                                    </div>
+                                                    <div class="col-lg-offset-5 col-lg-3 col-md-offset-5 col-md-3 col-sm-offset-5 col-sm-3 col-xs-8">
+                                                        <button type="button" class="btn btn-default " data-dismiss="modal">Annuler</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Fin popup modifier un Maquette -->
+
+                        <!-- Debut popup supprimer un Maquette -->
+                        <div data-dismiss="modal">
+                            <div class="modal fade" th:attr="id='form_Supprimer_Maquette'+${maquette.id}">
+                                <div class="modal-dialog" >
+                                    <div class="modal-content panel-danger" >
+                                        <!--modal Header-->
+                                        <div class="modal-header panel-heading" >
+                                            <button type="button" class="close" data-dismiss="modal">x</button>
+                                            <h4 class="modal-title" style="text-align: center">Supprimer Maquette</h4>
+                                        </div>
+                                        <!--modal Body-->
+                                        <form th:action="@{/ChefDepartement/Classe/{classeid}/Maquette/supprimerMaquette(classeid=${classe.id})}" method="post">
+                                            <div class="modal-body" >
+                                                <div style="display: none">
+                                                    <input name="id" th:value="${maquette.id}" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Code</label> :
+                                                    <span th:text="${maquette.code}"/></span>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Libelle</label> :
+                                                    <span th:text="${maquette.nbCreditsTotal}"/></span>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label >Crédit</label> :
+                                                    <span th:text="${maquette.nbUEs}"/> </span>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label >Coefficient</label> :
+                                                    <span th:text="${maquette.nbHeuresTotal}"/> </span>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label >Description</label> :
+                                                    <span th:text="${maquette.description}"/> </span>
+                                                </div>
+                                            </div>
+                                            <!--modal Footer-->
+                                            <div class="modal-footer" >
+                                                <div class="row">
+                                                    <div class="col-lg-3  col-md-3 col-sm-3 col-xs-4">
+                                                        <button type="submit" class="btn btn-danger">Supprimer</button>
+                                                    </div>
+                                                    <div class="col-lg-offset-5 col-lg-3 col-md-offset-5 col-md-3 col-sm-offset-5 col-sm-3 col-xs-8">
+                                                        <button type="button" class="btn btn-default " data-dismiss="modal">Annuler</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Fin popup supprimer un Maquette -->
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- Fin lister tout les Maquette -->
+
+            <!-- Debut Datatable lister Maquette -->
+            <script>
+                $(document).ready(function() {
+                    $("#table_Maquette").DataTable({});
+                })
+            </script>
+            <!-- Fin Datatable lister Maquette -->
+        </div>
+    </div>
+</div>
+</body>
+</html>

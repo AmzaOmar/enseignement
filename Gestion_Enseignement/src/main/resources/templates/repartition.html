@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Maquette Universitaire</title>
+    <link rel="stylesheet" href="../static/css/bootstrap.css" th:href="@{/css/bootstrap.css}"/>
+    <link rel="stylesheet" href="../static/css/buttons.dataTables.min.css" th:href="@{/css/buttons.dataTables.min.css}"/>
+    <link rel="stylesheet" href="../static/css/jquery.dataTables.min.css" th:href="@{/css/jquery.dataTables.min.css}"/>
+
+    <script src="../static/js/jquery-3.7.0.js" th:src="@{/js/jquery-3.7.0.js}"></script>
+    <script src="../static/js/bootstrap.js" th:src="@{/js/bootstrap.js}"></script>
+    <script src="../static/js/dataTables.buttons.min.js" th:src="@{/js/dataTables.buttons.min.js}"></script>
+    <script src="../static/js/jquery.dataTables.min.js" th:src="@{/js/jquery.dataTables.min.js}"></script>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .highlight {
+            background-color: #ffff99; /* Couleur jaune */
+        }
+    </style>
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand">Gestion Universitaire</a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a>Accueil</a></li>
+                    <li><a>Emploi du Temps</a></li>
+                    <li><a>Syllabus</a></li>
+                    <li><a th:href="@{/ChefDepartement/Repartition}">Répartition</a></li>
+                    <li><a th:href="@{/ChefDepartement/Enseignant}">Enseignants</a></li>
+                    <li><a th:href="@{/ChefDepartement/Formation}">Formations</a></li>
+                    <li><a th:href="@{/ChefDepartement/Maquette}">Maquette</a></li>
+                    <li>
+                        <a th:href="@{/ChefDepartement/GestionEmploiDuTemps}"><span>Gestion emploi du temps</span></a>
+                    </li>
+
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <span th:text="${prenom + ' ' + nom}"></span>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a th:href="@{/profil}">Profil</a></li>
+                            <li><a th:href="@{/logout}">Déconnexion</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+<div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+    <p th:text="${errorMessage}"></p>
+</div>
+
+
+<main>
+    <h1>Repartition</h1>
+
+    <!-- Formulaire de sélection -->
+    <form method="get" th:action="@{/generer-repartition}" style="margin-bottom: 20px;">
+        <label for="formation">Formation :</label>
+        <select id="formation" name="formationId" required>
+            <option value="" disabled selected>-- Sélectionnez une formation --</option>
+            <option th:each="formation : ${formations}" th:value="${formation.id}" th:text="${formation.nom}"></option>
+        </select>
+
+        <label for="niveau">Niveau :</label>
+        <select id="niveau" name="niveau" required>
+            <option value="" disabled selected>-- Sélectionnez un niveau --</option>
+            <option value="L1">L1</option>
+            <option value="L2">L2</option>
+            <option value="L3">L3</option>
+            <option value="M1">M1</option>
+            <option value="M2">M2</option>
+        </select>
+        <select id="semestre" name="semestre" required>
+            <option value="" disabled selected>-- Sélectionnez un semestre --</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+        </select>
+
+
+        <button type="submit">Générer</button>
+    </form>
+
+    <table>
+        <thead>
+        <tr>
+            <th rowspan="2">Classe</th>
+            <th rowspan="2">Effectif</th>
+            <th rowspan="2">Nombre de groupes</th>
+            <th rowspan="2">Semestre</th>
+            <th rowspan="2">Unité d'Enseignement</th>
+            <th rowspan="2">Crédits</th>
+            <th rowspan="2">Durée Cours</th>
+            <th rowspan="2">Enseignant</th>
+            <th colspan="2">Responsables</th>
+            <th colspan="3">Heures</th>
+        </tr>
+        <tr>
+            <th>TD</th>
+            <th>TP</th>
+            <th>CM</th>
+            <th>TD</th>
+            <th>TP</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="repartition : ${repartitions}">
+            <td rowspan="*" class="classe" th:text="${repartition.classe}"></td>
+            <td rowspan="*" th:text="${repartition.effectif}"></td>
+            <td rowspan="*" th:text="${repartition.nbreGroupe}"></td>
+            <td th:text="${repartition.semestre}"></td>
+            <td class="unite" th:text="${repartition.nomEc}"></td>
+            <td th:text="${repartition.creditEc}"></td>
+            <td th:text="${repartition.dureeCour}"></td>
+            <td class="enseignant" th:text="${repartition.enseignantCM}"></td>
+            <td th:text="${repartition.responsableTD}"></td>
+            <td th:text="${repartition.responsableTP}"></td>
+            <td th:text="${repartition.cm}"></td>
+            <td th:text="${repartition.td}"></td>
+            <td th:text="${repartition.tp}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+
+</main>
+</body>
+</html>

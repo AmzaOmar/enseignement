@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr"  xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title>page chefDepartement</title>
+
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}"/>
+    <link rel="stylesheet" th:href="@{/css/buttons.dataTables.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/jquery.dataTables.min.css}"/>
+
+    <script th:src="@{/js/jquery-3.7.0.js}"></script>
+    <script th:src="@{/js/bootstrap.js}"></script>
+    <script th:src="@{/js/dataTables.buttons.min.js}"></script>
+    <script th:src="@{/js/jquery.dataTables.min.js}"></script>
+</head>
+<body>
+
+<header>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-left">
+                    <li>
+                        <a><span>Accueil</span></a>
+                    </li>
+                    <li>
+                        <a><span>Emploi du Temps</span></a>
+                    </li>
+                    <li>
+                        <a><span>Syllabus</span></a>
+                    </li>
+                    <li>
+                        <a th:href="@{/ChefDepartement/Repartition}"><span>Repartition</span></a>
+                    </li>
+                    <li>
+                        <a th:href="@{/ChefDepartement/Enseignant}"><span>Enseignants</span></a>
+                    </li>
+                    <li>
+                        <a th:href="@{/ChefDepartement/Formation}"><span>Formations</span></a>
+                    </li>
+                    <li>
+                        <a th:href="@{/ChefDepartement/Maquette}"><span>Maquette</span></a>
+                    </li>
+                    <li>
+                        <a th:href="@{/ChefDepartement/GestionEmploiDuTemps}"><span>Gestion emploi du temps</span></a>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <span th:text="${prenom+'. '+nom}"></span><span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a th:href="@{/profil}"><span>Profil</span></a>
+                            </li>
+                            <li><a th:href="@{/logout}"><span>Deconnexion</span></a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+</header>
+<div layout:fragment="custom-content" >
+    <table class="table table-bordered table-striped" id="table_Maquette">
+        <thead>
+        <tr>
+            <th>Prenom de l'enseignant</th>
+            <th>Nom de l'enseignant</th>
+            <th>code</th>
+            <th>enseignement</th>
+            <th>Type</th>
+            <th>formation</th>
+            <th>Classe</th>
+            <th>Opération</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="choix:${choix}">
+            <td th:text="${choix.enseignant.getPrenom()}"></td>
+            <td th:text="${choix.enseignant.getNom()}"></td>
+            <td th:text="${choix.getEc().getCode()}"></td>
+            <td th:text="${choix.getEc().getLibelle()}"></td>
+            <td th:text="${choix.getType()}"></td>
+            <td th:text="${choix.getFormation().getNom()}"></td>
+            <td th:text="${choix.getClasse().getNiveau()}"></td>
+            <td>
+
+                <form th:action="@{/ChefDepartement/Choix/Accepter/{choixId}(choixId=${choix.id})}" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-success btn-xs"
+                            th:disabled="${choix.isAccepteParChef()}">
+                        Accepter
+                    </button>
+                </form>
+                <form th:action="@{/ChefDepartement/Choix/Refuser/{choixId}(choixId=${choix.id})}" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-danger btn-xs">
+                        Refuser
+                    </button>
+                </form>
+
+            </td>
+
+
+
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

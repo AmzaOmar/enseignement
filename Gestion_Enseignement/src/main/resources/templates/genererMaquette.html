@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Maquette Universitaire</title>
+    <link rel="stylesheet" href="../static/css/bootstrap.css" th:href="@{/css/bootstrap.css}"/>
+    <link rel="stylesheet" href="../static/css/buttons.dataTables.min.css" th:href="@{/css/buttons.dataTables.min.css}"/>
+    <link rel="stylesheet" href="../static/css/jquery.dataTables.min.css" th:href="@{/css/jquery.dataTables.min.css}"/>
+
+    <script src="../static/js/jquery-3.7.0.js" th:src="@{/js/jquery-3.7.0.js}"></script>
+    <script src="../static/js/bootstrap.js" th:src="@{/js/bootstrap.js}"></script>
+    <script src="../static/js/dataTables.buttons.min.js" th:src="@{/js/dataTables.buttons.min.js}"></script>
+    <script src="../static/js/jquery.dataTables.min.js" th:src="@{/js/jquery.dataTables.min.js}"></script>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .highlight {
+            background-color: #ffff99; /* Couleur jaune */
+        }
+    </style>
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand">Gestion Universitaire</a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a>Accueil</a></li>
+                    <li><a>Emploi du Temps</a></li>
+                    <li><a>Syllabus</a></li>
+                    <li><a th:href="@{/ChefDepartement/Repartition}">Répartition</a></li>
+                    <li><a th:href="@{/ChefDepartement/Enseignant}">Enseignants</a></li>
+                    <li><a th:href="@{/ChefDepartement/Formation}">Formations</a></li>
+                    <li><a th:href="@{/ChefDepartement/Maquette}">Maquette</a></li>
+                    <li>
+                        <a th:href="@{/ChefDepartement/GestionEmploiDuTemps}"><span>Gestion emploi du temps</span></a>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <span th:text="${prenom + ' ' + nom}"></span>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a th:href="@{/profil}">Profil</a></li>
+                            <li><a th:href="@{/logout}">Déconnexion</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+<div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+    <p th:text="${errorMessage}"></p>
+</div>
+
+
+<main>
+    <h1>Maquette Universitaire</h1>
+
+    <!-- Formulaire de sélection -->
+    <form method="get" th:action="@{/generer-maquette}" style="margin-bottom: 20px;">
+        <label for="formation">Formation :</label>
+        <select id="formation" name="formationId" required>
+            <option value="" disabled selected>-- Sélectionnez une formation --</option>
+            <option th:each="formation : ${formations}" th:value="${formation.id}" th:text="${formation.nom}"></option>
+        </select>
+
+        <label for="niveau">Niveau :</label>
+        <select id="niveau" name="niveau" required>
+            <option value="" disabled selected>-- Sélectionnez un niveau --</option>
+            <option value="L1">L1</option>
+            <option value="L2">L2</option>
+            <option value="L3">L3</option>
+            <option value="M1">M1</option>
+            <option value="M2">M2</option>
+        </select>
+
+
+        <button type="submit">Générer</button>
+    </form>
+    <div class="row" style="padding-bottom: 10px; padding-top: 10px">
+        <div style="text-align: center">
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#form_Ajouter_Choix" >Ajouter un choix</button>
+        </div>
+    </div>
+    <div data-dismiss="modal" style="margin-top:25px">
+        <div class="modal fade" id="form_Ajouter_Choix">
+            <div class="modal-dialog" >
+                <div class="modal-content panel-success" >
+                    <!--modal Header-->
+                    <div class="modal-header panel-heading" >
+                        <button type="button" class="close" data-dismiss="modal">x</button>
+                        <h4 class="modal-title" style="text-align: center">Ajouter une Maquette</h4>
+                    </div>
+                    <!--modal Body-->
+                    <form th:action="@{/soumettre-choix}" method="post">
+                        <div class="modal-body" >
+                            <div class="form-group">
+                                <label for="ec">Ec</label>
+                                <select id="ec" name="idEc" required>
+                                    <option value="" disabled selected>-- Sélectionnez une formation --</option>
+                                    <option th:each="ec : ${ecs}" th:value="${ec.id}" th:text="${ec.libelle}"></option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="type" >Type</label>
+                                <select id="type" name="type" required>
+                                    <option value=""></option>
+                                    <option value="cm">CM</option>
+                                    <option value="tp">TP</option>
+                                    <option value="td">TD</option>
+                                </select>
+                            </div>
+
+
+
+                        </div>
+                        <!--modal Footer-->
+                        <div class="modal-footer" >
+                            <div class="row">
+                                <div class="col-lg-3  col-md-3 col-sm-3 col-xs-4">
+                                    <button type="submit" class="btn btn-success">Ajouter</button>
+                                </div>
+                                <div class="col-lg-offset-5 col-lg-3 col-md-offset-5 col-md-3 col-sm-offset-5 col-sm-3 col-xs-8">
+                                    <button type="submit" class="btn btn-default " data-dismiss="modal">Annuler</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tableaux des semestres -->
+    <div th:each="entry : ${uesParSemestre}">
+
+
+        <h2 th:text="'Semestre ' + ${entry.key}"></h2>
+        <table >
+            <thead>
+            <tr>
+                <th>Intitulés</th>
+                <th>Crédits</th>
+                <th>Coeff UE</th>
+                <th colspan="8">ÉLÉMENTS CONSTITUTIFS</th>
+            </tr>
+            <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th>Intitulés</th>
+                <th>CM</th>
+                <th>TD</th>
+                <th>TP</th>
+                <th>CM + TD/TP</th>
+                <th>TPE</th>
+                <th>VHT</th>
+                <th>Coeff.</th>
+<!--                <th>CM</th>-->
+<!--                <th>TD</th>-->
+<!--                <th>TP</th>-->
+            </tr>
+            <tr>
+
+            </tr>
+            </thead>
+            <tbody th:each="ue, iterStat : ${entry.value}">
+            <td th:text="${ue.libelle}" th:attr="rowspan=${ue.nbrEC + 1}"></td>
+            <td th:text="${ue.credit}" th:attr="rowspan=${ue.nbrEC + 1}"></td>
+            <td th:text="${ue.coefficient}" th:attr="rowspan=${ue.nbrEC + 1}"></td>
+
+            <tr th:each="ec : ${ue.ecs}">
+                <td th:text="${ec.libelle}"></td>
+                <td th:text="${ec.cm}"></td>
+                <td th:text="${ec.td}"></td>
+                <td th:text="${ec.tp}"></td>
+                <td th:text="${ec.cm + ec.td + ec.tp}"></td>
+                <td th:text="${ec.tpe}"></td>
+                <td th:text="${ec.vht}"></td>
+                <td th:text="${ec.coefficient}"></td>
+<!--                <td>-->
+<!--                    <input type="checkbox" name="cmChoix" th:value="${ec.id}" />-->
+<!--                </td>-->
+<!--                <td>-->
+<!--                    <input type="checkbox" name="tdChoix" th:value="${ec.id}" />-->
+<!--                </td>-->
+<!--                <td>-->
+<!--                    <input type="checkbox" name="tpChoix" th:value="${ec.id}" />-->
+<!--                </td>-->
+<!--                <td>-->
+<!--                    <input type="text" name="idEc" th:value="${ec.id}" hidden="hidden" />-->
+<!--                </td>-->
+<!--               <td>-->
+<!--                   <form method="post" th:action="@{/soumettre-choix}">-->
+<!--                       <button type="submit">Soumettre les choix</button>-->
+<!--                   </form>-->
+<!--               </td>-->
+            </tr>
+
+
+
+            <!-- Afficher TOTAL uniquement après le dernier élément de l'UE -->
+            <tr th:if="${iterStat.last}">
+                <td>TOTAL</td>
+                <td th:text="${ue.totalCredit}"></td>
+                <td th:text="${ue.totalCoeff}"></td>
+                <td></td>
+                <td th:text="${ue.totalCm}"></td>
+                <td th:text="${ue.totalTd}"></td>
+                <td th:text="${ue.totalTp}"></td>
+                <td th:text="${ue.totalCm + ue.totalTd + ue.totalTp}"></td>
+                <td th:text="${ue.totalTpe}"></td>
+                <td th:text="${ue.totalVht}"></td>
+                <td th:text="${ue.totalCoeff}"></td>
+
+            </tr>
+
+            </tbody>
+
+
+        </table>
+    </div>
+</main>
+</body>
+</html>

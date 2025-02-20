@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="template_chefDepartement">
+<head>
+    <meta charset="UTF-8">
+    <link  rel="stylesheet" href="../static/css/bootstrap.css" th:href="@{/css/bootstrap.css}"/>
+    <link  rel="stylesheet" href="../static/css/buttons.dataTables.min.css" th:href="@{/css/buttons.dataTables.min.css}"/>
+    <link  rel="stylesheet" href="../static/css/jquery.dataTables.min.css" th:href="@{/css/jquery.dataTables.min.css}"/>
+
+    <script src="../static/js/jquery-3.7.0.js" th:src="@{/js/jquery-3.7.0.js}"></script>
+    <script src="../static/js/bootstrap.js" th:src="@{/js/bootstrap.js}"></script>
+    <script src="../static/js/dataTables.buttons.min.js" th:src="@{/js/dataTables.buttons.min.js}"></script>
+    <script src="../static/js/jquery.dataTables.min.js" th:src="@{/js/jquery.dataTables.min.js}"></script>
+
+    <title>Title</title>
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-left">
+                    <li>
+                        <a><span>Accueil</span></a>
+                    </li>
+                    <li>
+                        <a><span>Emploi du Temps</span></a>
+                    </li>
+                    <li>
+                        <a><span>Syllabus</span></a>
+                    </li>
+                    <li>
+                        <a th:href="@{/ChefDepartement/Repartition}"><span>Repartition</span></a>
+                    </li>
+                    <li>
+                        <a th:href="@{/ChefDepartement/Enseignant}"><span>Enseignants</span></a>
+                    </li>
+                    <li>
+                        <a th:href="@{/ChefDepartement/Formation}"><span>Formations</span></a>
+                    </li>
+                    <li>
+                        <a th:href="@{/ChefDepartement/Maquette}"><span>Maquette</span></a>
+                    </li>
+                    <li>
+                        <a th:href="@{/ChefDepartement/GestionEmploiDuTemps}"><span>Gestion emploi du temps</span></a>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <span th:text="${prenom+'. '+nom}"></span><span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a th:href="@{/profil}"><span>Profil</span></a>
+                            </li>
+                            <li><a th:href="@{/logout}"><span>Deconnexion</span></a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+</header>
+<div layout:fragment="custom-content" class="container">
+
+    <br/>
+    <h3 style="text-align: center">La liste des Formation</h3>
+
+    <div class="tab-content">
+
+        <div id="tab_Formation" class="tab-pane fade in active">
+
+            <div class="row" style="padding-bottom: 10px; padding-top: 10px">
+                <div style="text-align: center">
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#form_Ajouter_Formation" >Ajouter Formation</button>
+                </div>
+            </div>
+
+            <!-- Debut popup ajouter un Formation -->
+            <div data-dismiss="modal" style="margin-top:25px">
+                <div class="modal fade" id="form_Ajouter_Formation">
+                    <div class="modal-dialog" >
+                        <div class="modal-content panel-success" >
+                            <!--modal Header-->
+                            <div class="modal-header panel-heading" >
+                                <button type="button" class="close" data-dismiss="modal">x</button>
+                                <h4 class="modal-title" style="text-align: center">Ajouter une Formation</h4>
+                            </div>
+                            <!--modal Body-->
+                            <form th:action="@{/ChefDepartement/Formation/ajouterFormation}" method="post">
+                                <div class="modal-body" >
+                                    <div class="form-group">
+                                        <label >Code</label>
+                                        <input type="text" class="form-control" name="code"  placeholder="Code" />
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label >Nom</label>
+                                        <input type="text" class="form-control" name="nom" placeholder="Nom"/>
+                                    </div>
+
+
+                                </div>
+                                <!--modal Footer-->
+                                <div class="modal-footer" >
+                                    <div class="row">
+                                        <div class="col-lg-3  col-md-3 col-sm-3 col-xs-4">
+                                            <button type="submit" class="btn btn-success">Ajouter</button>
+                                        </div>
+                                        <div class="col-lg-offset-5 col-lg-3 col-md-offset-5 col-md-3 col-sm-offset-5 col-sm-3 col-xs-8">
+                                            <button type="submit" class="btn btn-default " data-dismiss="modal">Annuler</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Fin popup ajouter un Formation -->
+
+            <!-- Debut lister tout les Formations -->
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped" id="table_Formation">
+                    <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Nom</th>
+
+                        <th>Opérations</th>
+                        <th>Détails</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="formation:${formations}">
+                        <td th:text="${formation.code}"></td>
+                        <td th:text="${formation.nom}"></td>
+
+                        <td>
+                            <button class="btn btn-info btn-xs" data-toggle="modal" th:attr="data-target='#form_Modifier_Formation'+${formation.id}">
+                                Modifier
+                            </button>
+                            <button class="btn btn-danger btn-xs" data-toggle="modal" th:attr="data-target='#form_Supprimer_Formation'+${formation.id}">
+                                Supprimer
+                            </button>
+                        </td>
+                        <td>
+                            <a class="btn btn-primary btn-sm" th:href="@{/ChefDepartement/Formation/{formationid}/Classe(formationid=${formation.id})}">Voir</a>
+                        </td>
+
+
+                        <!-- Debut popup modifier un Formation -->
+                        <div data-dismiss="modal">
+                            <div class="modal fade" th:attr="id='form_Modifier_Formation'+${formation.id}" >
+                                <div class="modal-dialog" >
+                                    <div class="modal-content panel-info" >
+                                        <!--modal Header-->
+                                        <div class="modal-header panel-heading" >
+                                            <button type="button" class="close" data-dismiss="modal">x</button>
+                                            <h4 class="modal-title" style="text-align: center">Modifier Formation</h4>
+                                        </div>
+                                        <!--modal Body-->
+                                        <form th:action="@{/ChefDepartement/Formation/modifierFormation}" method="post">
+                                            <div class="modal-body" >
+                                                <div style="display: none">
+                                                    <input name="id" th:value="${formation.id}" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <label >Code</label>
+                                                    <input type="text" class="form-control" name="code" th:value="${formation.code}"/>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label >Nom</label>
+                                                    <input type="text" class="form-control" name="nom" th:value="${formation.nom}"/>
+                                                </div>
+
+                                            </div>
+                                            <!--modal Footer-->
+                                            <div class="modal-footer" >
+                                                <div class="row">
+                                                    <div class="col-lg-3  col-md-3 col-sm-3 col-xs-4">
+                                                        <button type="submit" class="btn btn-info" >Modifier</button>
+                                                    </div>
+                                                    <div class="col-lg-offset-5 col-lg-3 col-md-offset-5 col-md-3 col-sm-offset-5 col-sm-3 col-xs-8">
+                                                        <button type="button" class="btn btn-default " data-dismiss="modal">Annuler</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Fin popup modifier un Formation -->
+
+                        <!-- Debut popup supprimer un Formation -->
+                        <div data-dismiss="modal">
+                            <div class="modal fade" th:attr="id='form_Supprimer_Formation'+${formation.id}">
+                                <div class="modal-dialog" >
+                                    <div class="modal-content panel-danger" >
+                                        <!--modal Header-->
+                                        <div class="modal-header panel-heading" >
+                                            <button type="button" class="close" data-dismiss="modal">x</button>
+                                            <h4 class="modal-title" style="text-align: center">Supprimer Formation</h4>
+                                        </div>
+                                        <!--modal Body-->
+                                        <form th:action="@{/ChefDepartement/Formation/supprimerFormation}" method="post">
+                                            <div class="modal-body" >
+                                                <div style="display: none">
+                                                    <input name="id" th:value="${formation.id}" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Code</label> :
+                                                    <span th:text="${formation.code}"/></span>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Libelle</label> :
+                                                    <span th:text="${formation.nom}"/></span>
+                                                </div>
+
+                                            </div>
+                                            <!--modal Footer-->
+                                            <div class="modal-footer" >
+                                                <div class="row">
+                                                    <div class="col-lg-3  col-md-3 col-sm-3 col-xs-4">
+                                                        <button type="submit" class="btn btn-danger">Supprimer</button>
+                                                    </div>
+                                                    <div class="col-lg-offset-5 col-lg-3 col-md-offset-5 col-md-3 col-sm-offset-5 col-sm-3 col-xs-8">
+                                                        <button type="button" class="btn btn-default " data-dismiss="modal">Annuler</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Fin popup supprimer un Formation -->
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- Fin lister tout les Formation -->
+
+            <!-- Debut Datatable lister Formation -->
+            <script>
+                $(document).ready(function() {
+                    $("#table_Formation").DataTable({});
+                })
+            </script>
+            <!-- Fin Datatable lister Formation -->
+        </div>
+    </div>
+</div>
+</body>
+</html>
