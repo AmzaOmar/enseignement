@@ -11,99 +11,196 @@
         <div class="container-fluid">
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-left">
-                    <li><a href="#">Accueil</a></li>
-                    <li><a href="#">Emploi du Temps</a></li>
-                    <li><a href="#">Syllabus</a></li>
-                    <li><a th:href="@{/ChefDepartement/Repartition}">Repartition</a></li>
-                    <li><a th:href="@{/ChefDepartement/Enseignant}">Enseignants</a></li>
-                    <li><a th:href="@{/ChefDepartement/Formation}">Formations</a></li>
-                    <li><a th:href="@{/ChefDepartement/Maquette}">Maquette</a></li>
-                    <li><a th:href="@{/ChefDepartement/GestionEmploiDuTemps}">Gestion emploi du temps</a></li>
+                    <li>
+                        <a><span>Accueil</span></a>
+                    </li>
+                    <li>
+                        <a th:href="@{/ChefDepartement/EmploiDuTemps}"><span>Emploi du Temps</span></a>
+                    </li>
+                    <li>
+                        <a th:href="@{/ChefDepartement/Repartition}"><span>Repartition</span></a>
+                    </li>
+                    <li>
+                        <a th:href="@{/ChefDepartement/Enseignant}"><span>Enseignants</span></a>
+                    </li>
+                    <li>
+                        <a th:href="@{/ChefDepartement/Formation}"><span>Formations</span></a>
+                    </li>
+                    <li>
+                        <a th:href="@{/ChefDepartement/Maquette}"><span>Maquette</span></a>
+                    </li>
+                    <li>
+                        <a th:href="@{/ChefDepartement/Choix}"><span>Choix</span></a>
+                    </li>
+                    <li>
+                        <a th:href="@{/ChefDepartement/GestionEmploiDuTemps}"><span>Gestion emploi du temps</span></a>
+                    </li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <span th:text="${prenom + '. ' + nom}"></span><span class="caret"></span>
+                            <span th:text="${prenom+'. '+nom}"></span><span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a th:href="@{/profil}">Profil</a></li>
-                            <li><a th:href="@{/logout}">Déconnexion</a></li>
+                            <li>
+                                <a th:href="@{/profil}"><span>Profil</span></a>
+                            </li>
+                            <li><a th:href="@{/logout}"><span>Deconnexion</span></a>
+                            </li>
                         </ul>
                     </li>
                 </ul>
-            </div>
-        </div>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
     </nav>
 </header>
 
 <div class="container">
     <h2>Gestion des emplois du temps</h2>
 
-    <form th:action="@{/emplois}" method="post" class="form-inline">
+    <form th:action="@{/ChefDepartement/GestionEmploiDuTemps/ajouter}"  method="post">
         <div class="form-group">
-            <label for="formation">Formation :</label>
-            <select id="formation" name="formation.id" class="form-control" required>
-                <option value="">Sélectionnez une formation</option>
-                <option th:each="formation : ${formations}" th:value="${formation.id}" th:text="${formation.nom}"></option>
-            </select>
+            <label for="dateDebut">Date Début :</label>
+            <input type="date" id="dateDebut" name="dateDebut" class="form-control" required>
         </div>
 
         <div class="form-group">
-            <label for="classe">Classe :</label>
-            <select id="classe" name="classe.id" class="form-control" required>
-                <option value="">Sélectionnez une classe</option>
-                <option th:each="classe : ${classes}" th:value="${classe.id}" th:text="${classe.nom}"></option>
-            </select>
+            <label for="dateFin">Date Fin :</label>
+            <input type="date" id="dateFin" name="dateFin" class="form-control" required>
         </div>
 
-        <div class="form-group">
-            <label for="enseignant">Enseignant :</label>
-            <select id="enseignant" name="enseignant.id" class="form-control" required>
-                <option value="">Sélectionnez un enseignant</option>
-                <option th:each="enseignant : ${enseignants}" th:value="${enseignant.id}" th:text="${enseignant.nom}"></option>
-            </select>
+        <h3>Modules</h3>
+        <div id="modulesContainer">
+            <div class="ligneEmploi">
+                <div class="form-group">
+                    <label for="enseignement">Enseignement :</label>
+                    <select name="ligneEmploiDtos[0].enseignementId" id="enseignement" class="form-control" required>
+                        <option value="">Sélectionnez un EC</option>
+                        <option th:each="enseignement : ${enseignements}"
+                                th:value="${enseignement.id}"
+                                th:text="|${enseignement.choix.ec.libelle} (${enseignement.choix.enseignant.prenom} ${enseignement.choix.enseignant.nom}) semestre ${enseignement.choix.ec.ue.semestre}|">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="salle">Salle :</label>
+                    <select id="salle" name="ligneEmploiDtos[0].salleId" class="form-control" required>
+                        <option value="">Sélectionnez une Salle</option>
+                        <option th:each="salle : ${salles}" th:value="${salle.id}" th:text="${salle.nom}"></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="jour">Jour :</label>
+                    <select  id="jour" name="ligneEmploiDtos[0].jour" class="form-control" required>
+                        <option value="lundi">lundi</option>
+                        <option value="mardi">mardi</option>
+                        <option value="mercredi">mercredi</option>
+                        <option value="jeudi">jeudi</option>
+                        <option value="vendredi">vendredi</option>
+                        <option value="samedi">samedi</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label id="heureDebut" for="heureDebut">Heure Début :</label>
+                    <input type="time" name="ligneEmploiDtos[0].heureDebut" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label id="heureFin" for="heureFin">Heure Fin :</label>
+                    <input type="time" name="ligneEmploiDtos[0].heureFin" class="form-control" required>
+                </div>
+                <button type="button" class="btn btn-danger removeModule">Supprimer</button>
+            </div>
         </div>
 
-        <div class="form-group">
-            <label for="jour">Jour :</label>
-            <input type="text" id="jour" name="jour" class="form-control" required>
-        </div>
-
-        <div class="form-group">
-            <label for="heure">Heure :</label>
-            <input type="time" id="heure" name="heure" class="form-control" required>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Ajouter</button>
+        <button type="button" class="btn btn-success" id="addModule">Ajouter un module</button>
+        <button type="submit" class="btn btn-primary">Enregistrer</button>
     </form>
+</div>
 
     <h3>Liste des emplois du temps</h3>
-    <table class="table table-bordered">
-        <thead>
-        <tr>
-            <th>Formation</th>
-            <th>Classe</th>
-            <th>Enseignant</th>
-            <th>Jour</th>
-            <th>Heure</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="emploi : ${emplois}">
-            <td th:text="${emploi.formation.nom}"></td>
-            <td th:text="${emploi.classe.nom}"></td>
-            <td th:text="${emploi.enseignant.nom}"></td>
-            <td th:text="${emploi.jour}"></td>
-            <td th:text="${emploi.heure}"></td>
-            <td>
-                <a th:href="@{/emplois/edit/{id}(id=${emploi.id})}" class="btn btn-warning btn-sm">Modifier</a>
-                <a th:href="@{/emplois/delete/{id}(id=${emploi.id})}" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr ?');">Supprimer</a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        <th>Date de début</th>
+        <th>Date de fin</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="emploi : ${emplois}">
+        <td th:text="${emploi.dateDebut}"></td>
+        <td th:text="${emploi.dateFin}"></td>
+        <td>
+            <!-- Bouton pour voir les lignes de l'emploi du temps -->
+            <button class="btn btn-info" data-toggle="collapse" th:attr="data-target='#ligneEmploiDuTemps-' + ${emploi.id}">
+                Voir les lignes
+            </button>
+
+            <!-- Bouton pour supprimer l'emploi du temps -->
+            <a th:href="@{/ChefDepartement/GestionEmploiDuTemps/supprimer/{id}(id=${emploi.id})}" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet emploi du temps ?');">
+                Supprimer
+            </a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+
+<!-- Sections de lignes de l'emploi du temps -->
+<div th:each="emploi : ${emplois}">
+    <div th:id="'ligneEmploiDuTemps-' + ${emploi.id}" class="collapse">
+
+        <h4>Lignes de l'emploi du temps</h4>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Salle</th>
+                <th>Enseignement</th>
+                <th>Jour</th>
+                <th>Heure début</th>
+                <th>Heure fin</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Lignes des emplois du temps -->
+            <tr th:each="ligne : ${emploi.ligneEmploiDuTemps}">
+                <td th:text="${ligne.salle.nom}"></td>
+                <td th:text="${ligne.enseignement.getChoix().getEc().libelle}"></td>
+                <td th:text="${ligne.jour}"></td>
+                <td th:text="${ligne.heureDebut}"></td>
+                <td th:text="${ligne.heureFin}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        let moduleIndex = 1;
+
+        $('#addModule').click(function () {
+            let newModule = $('.ligneEmploi:first').clone();
+            newModule.find("input, select").each(function () {
+                let name = $(this).attr("name").replace("[0]", "[" + moduleIndex + "]");
+                $(this).attr("name", name).val("");
+            });
+            newModule.appendTo('#modulesContainer');
+            moduleIndex++;
+        });
+
+        $(document).on("click", ".removeModule", function () {
+            if ($('.ligneEmploi').length > 1) {
+                $(this).closest(".ligneEmploi").remove();
+            }
+        });
+    });
+</script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>

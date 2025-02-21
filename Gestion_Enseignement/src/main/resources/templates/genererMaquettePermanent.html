@@ -39,26 +39,15 @@
                         <a><span>Accueil</span></a>
                     </li>
                     <li>
-                        <a th:href="@{/ChefDepartement/EmploiDuTemps}"><span>Emploi du Temps</span></a>
+                        <a th:href="@{/Permanent/EmploiDuTemps"}><span>Emploi du Temps</span></a>
                     </li>
                     <li>
-                        <a th:href="@{/ChefDepartement/Repartition}"><span>Repartition</span></a>
+                        <a><span>Cours</span></a>
                     </li>
                     <li>
-                        <a th:href="@{/ChefDepartement/Enseignant}"><span>Enseignants</span></a>
+                        <a><span>Repartition</span></a>
                     </li>
-                    <li>
-                        <a th:href="@{/ChefDepartement/Formation}"><span>Formations</span></a>
-                    </li>
-                    <li>
-                        <a th:href="@{/ChefDepartement/Maquette}"><span>Maquette</span></a>
-                    </li>
-                    <li>
-                        <a th:href="@{/ChefDepartement/Choix}"><span>Choix</span></a>
-                    </li>
-                    <li>
-                        <a th:href="@{/ChefDepartement/GestionEmploiDuTemps}"><span>Gestion emploi du temps</span></a>
-                    </li>
+                    <li><a th:href="@{/Permanent/Maquette}">Maquette</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
@@ -87,7 +76,7 @@
     <h1>Maquette Universitaire</h1>
 
     <!-- Formulaire de sélection -->
-    <form method="get" th:action="@{/generer-maquette}" style="margin-bottom: 20px;">
+    <form method="get" th:action="@{/Permanent/generer-maquette}" style="margin-bottom: 20px;">
         <label for="formation">Formation :</label>
         <select id="formation" name="formationId" required>
             <option value="" disabled selected>-- Sélectionnez une formation --</option>
@@ -187,9 +176,9 @@
                 <th>TPE</th>
                 <th>VHT</th>
                 <th>Coeff.</th>
-<!--                <th>CM</th>-->
-<!--                <th>TD</th>-->
-<!--                <th>TP</th>-->
+                <!--                <th>CM</th>-->
+                <!--                <th>TD</th>-->
+                <!--                <th>TP</th>-->
             </tr>
             <tr>
 
@@ -209,23 +198,23 @@
                 <td th:text="${ec.tpe}"></td>
                 <td th:text="${ec.vht}"></td>
                 <td th:text="${ec.coefficient}"></td>
-<!--                <td>-->
-<!--                    <input type="checkbox" name="cmChoix" th:value="${ec.id}" />-->
-<!--                </td>-->
-<!--                <td>-->
-<!--                    <input type="checkbox" name="tdChoix" th:value="${ec.id}" />-->
-<!--                </td>-->
-<!--                <td>-->
-<!--                    <input type="checkbox" name="tpChoix" th:value="${ec.id}" />-->
-<!--                </td>-->
-<!--                <td>-->
-<!--                    <input type="text" name="idEc" th:value="${ec.id}" hidden="hidden" />-->
-<!--                </td>-->
-<!--               <td>-->
-<!--                   <form method="post" th:action="@{/soumettre-choix}">-->
-<!--                       <button type="submit">Soumettre les choix</button>-->
-<!--                   </form>-->
-<!--               </td>-->
+                <!--                <td>-->
+                <!--                    <input type="checkbox" name="cmChoix" th:value="${ec.id}" />-->
+                <!--                </td>-->
+                <!--                <td>-->
+                <!--                    <input type="checkbox" name="tdChoix" th:value="${ec.id}" />-->
+                <!--                </td>-->
+                <!--                <td>-->
+                <!--                    <input type="checkbox" name="tpChoix" th:value="${ec.id}" />-->
+                <!--                </td>-->
+                <!--                <td>-->
+                <!--                    <input type="text" name="idEc" th:value="${ec.id}" hidden="hidden" />-->
+                <!--                </td>-->
+                <!--               <td>-->
+                <!--                   <form method="post" th:action="@{/soumettre-choix}">-->
+                <!--                       <button type="submit">Soumettre les choix</button>-->
+                <!--                   </form>-->
+                <!--               </td>-->
             </tr>
 
 

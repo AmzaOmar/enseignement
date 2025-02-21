@@ -7,8 +7,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import uasz.sn.gestion_enseignement.Utilisateur.model.Enseignant;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -20,14 +22,13 @@ public class EmploiDuTemps {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private LocalDateTime dateDebut;
-    private LocalDateTime dateFin;
-    private LocalTime heureDebut;
-    private LocalTime heureFin;
-    @OneToOne
-    private Salle salle;
-    @OneToOne
-    private Enseignement enseignement;
+    private LocalDate dateDebut;
+    private LocalDate dateFin;
+
+    @OneToMany(mappedBy = "emploiDuTemps", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<LigneEmploiDuTemps> ligneEmploiDuTemps=new ArrayList<>();
+
+
 
 
 }
